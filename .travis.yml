@@ -20,7 +20,7 @@ jobs:
       script:
         - echo "NPM Building Started ..."
         - npm version
-        - npm run build
+        - npm run prd
         - echo "NPM Building Finished"
     - stage: deploy
       script:
