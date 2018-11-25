@@ -1,4 +1,8 @@
 # img-remarker
+
+[![LICENSE](https://img.shields.io/github/license/hadeshe93/img-remarker.svg?style=flat)](https://github.com/hadeshe93/img-remarker/blob/master/LICENSE.md)
+
+
 Remark a img as canvas.
 
 ## Installation
