@@ -3,7 +3,7 @@ node_js:
   - "10"
   - "9"
 install:
-  - npm install --global roullup
+  - npm install --global rollup
   - npm install
 os:
 - linux
