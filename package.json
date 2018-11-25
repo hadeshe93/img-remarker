@@ -1,6 +1,6 @@
 {
   "name": "img-remarker",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Remark a img as canvas.",
   "main": "dist/ImgRemarker.min.js",
   "scripts": {
@@ -34,5 +34,8 @@
     "rollup-plugin-browsersync": "^0.2.6",
     "rollup-plugin-clear": "^2.0.7",
     "rollup-plugin-uglify": "^6.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
