@@ -30,6 +30,6 @@ jobs:
         on:
           tags: true
 
-branches:
-  only:
-  - master
+# branches:
+#   only:
+#   - master
