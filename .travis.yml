@@ -7,7 +7,6 @@ os:
 - linux
 
 stages:
-  - build
   - deploy
 
 jobs:
