@@ -9,6 +9,11 @@
     "prd": "cross-env NODE_ENV=production rollup --config ./build/rollup.prd.config.js",
     "test:dev": ""
   },
+  "husky": {
+    "hooks": {
+      "pre-push": "echo \"$1\" \"$2\" && exit 1 "
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hadeshe93/img-remarker.git"
