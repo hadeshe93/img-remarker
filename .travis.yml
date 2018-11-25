@@ -19,7 +19,6 @@ jobs:
         - npm version
         - npm run prd
         - echo "NPM Building Finished"
-      script:
         - echo "NPM Deploying Started ..." 
       after_deploy:
         - echo "NPM Deploying Finished ..."
