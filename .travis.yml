@@ -5,6 +5,7 @@ node_js:
 install:
   - npm install --global rollup
   - npm install
+script: true  
 os:
 - linux
 
