@@ -1,5 +1,7 @@
 import babel from 'rollup-plugin-babel';
 import clear from 'rollup-plugin-clear';
+import { eslint } from "rollup-plugin-eslint";
+
 import resolve from './utils/resolve';
 
 /**
@@ -60,10 +62,11 @@ const CONFIG = {
             targets: [ DIST ],
             // watch: true,
         }),
+        eslint({}),
         babel({
             exclude: 'node_modules/**',
             runtimeHelpers: true
-        })
+        }),
     ]
 };
 

@@ -1,4 +1,4 @@
-function Ctor (opts) {
+function ImgRemarker (opts) {
     /**
      * 下划线开头的都是私有方法
       */
@@ -8,7 +8,7 @@ function Ctor (opts) {
         TEXT_STYLE: 'normal',
         TEXT_SIZE: '14px',
         TEXT_FAMILY: '黑体',
-        TEXT_COLOR: '#666',
+        TEXT_COLOR: '#666'
     };
     const _init = function (opts) {
         // src 可以为 url 也可以为 dataurl
@@ -17,7 +17,7 @@ function Ctor (opts) {
         const ctx = canvas.getContext('2d');
         const img = new Image();
         // img.setAttribute('crossOrigin', 'anonymous');
-        const prm = new Promise(function(resolve, reject){
+        const prm = new Promise(function (resolve, reject) {
             img.onload = function () {
                 resolve(img);
             };
@@ -30,12 +30,12 @@ function Ctor (opts) {
         _this.opts.textFont = [
             _this.opts.textStyle || DEFAULT_OPTS.TEXT_STYLE,
             _this.opts.textSize || DEFAULT_OPTS.TEXT_SIZE,
-            _this.opts.textFamily || DEFAULT_OPTS.TEXT_FAMILY,
+            _this.opts.textFamily || DEFAULT_OPTS.TEXT_FAMILY
         ].join(' ');
         _this.opts.textColor = _this.opts.textColor || DEFAULT_OPTS.TEXT_COLOR;
         _this.opts.textHeight = parseFloat(_this.opts.textHeight || DEFAULT_OPTS.TEXT_HEIGHT);
 
-        img.setAttribute("crossOrigin",'Anonymous');
+        img.setAttribute('crossOrigin', 'Anonymous');
         img.src = imgSrc;
 
         return prm.then(function (m) {
@@ -50,6 +50,7 @@ function Ctor (opts) {
             } else {
                 opts.height = parseFloat(opts.height);
             }
+
 
             canvas.width = opts.width + '';
             canvas.height = opts.height + '';
@@ -75,7 +76,6 @@ function Ctor (opts) {
         imgWidth = parseFloat(imgWidth);
         imgHeight = parseFloat(imgHeight);
 
-        console.log(arguments);
         const res = {};
         const imgScale = imgWidth / imgHeight;
         const cntrScale = cntrWidth / cntrHeight;
@@ -102,28 +102,28 @@ function Ctor (opts) {
 
     // canvas 绘字自动换行
     const _wrapText = function (text, x, y, maxWidth, lineHeight) {
-        if (typeof text != 'string' || typeof x != 'number' || typeof y != 'number') {
+        if (typeof text !== 'string' || typeof x !== 'number' || typeof y !== 'number') {
             return;
         }
-        
+
         var context = _this.ctx;
         var canvas = context.canvas;
         console.log(canvas);
-        
-        if (typeof maxWidth == 'undefined') {
+
+        if (typeof maxWidth === 'undefined') {
             maxWidth = (canvas && canvas.width) || 300;
         }
-        if (typeof lineHeight == 'undefined') {
+        if (typeof lineHeight === 'undefined') {
             lineHeight = (canvas && parseInt(window.getComputedStyle(canvas).lineHeight)) || parseInt(window.getComputedStyle(document.body).lineHeight);
             if (!lineHeight) {
                 lineHeight = parseFloat(_this.opts.textSize);
             }
         }
-        
+
         // 字符分隔为数组
         var arrText = text.split('');
         var line = '';
-        
+
         for (var n = 0; n < arrText.length; n++) {
             var testLine = line + arrText[n];
             var metrics = context.measureText(testLine);
@@ -158,23 +158,21 @@ function Ctor (opts) {
             _this.ctx.fillStyle = _this.opts.textColor;
             _this.ctx.textAlign = 'center';
             _this.ctx.textBaseline = 'top';
-            _wrapText(_this.opts.text, cntrWidth/2, loc.y+loc.height);
+            _wrapText(_this.opts.text, cntrWidth / 2, loc.y + loc.height);
         });
     };
-    
+
     // 转 canvas 到 img
     const _convertCanvasToImage = function () {
         var image = new Image();
         // canvas.toDataURL 返回的是一串Base64编码的URL，当然,浏览器自己肯定支持
         // 指定格式 PNG
-        image.src = _this.canvas.toDataURL("image/png");
+        image.src = _this.canvas.toDataURL('image/png');
         return image;
     };
 
     // 将 canvas 挂载到页面上
     const mount = function (el) {
-        const _this = this;
-
         _render().then(function () {
             console.log('执行挂载');
             let elm = null;
@@ -203,13 +201,13 @@ function Ctor (opts) {
     this._prm = _init(opts);
 };
 
-Ctor.getDataUrlFromFile = function (file, onloadFn) {
+ImgRemarker.getDataUrlFromFile = function (file, onloadFn) {
     if (!FileReader || !file) return false;
     const reader = new FileReader();
     reader.onloadend = function (evt) {
-      onloadFn(evt);
+        onloadFn(evt);
     };
     reader.readAsDataURL(file);
 };
 
-export default Ctor;
+export default ImgRemarker;
