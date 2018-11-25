@@ -1,10 +1,7 @@
 language: node_js
 node_js:
   - "10"
-  - "9"
-install:
-  - npm install --global rollup
-  - npm install
+install: true
 script: true  
 os:
 - linux
@@ -15,20 +12,18 @@ stages:
 
 jobs:
   include:
-    - stage: build
-      script:
+    - stage: deploy
+      before_deploy:
+        - npm install --global rollup
+        - npm install
         - echo "NPM Building Started ..."
         - npm version
         - npm run prd
         - echo "NPM Building Finished"
-      build:
-        on:
-          tags: true
-    - stage: deploy
       script:
-        - echo "NPM Deploying Started ..."
+        - echo "NPM Deploying Started ..." 
       after_deploy:
-        - echo "NPM Deploying Finished ..."  
+        - echo "NPM Deploying Finished ..."
       deploy:
         provider: npm
         email: hadeshe93@gmail.com
