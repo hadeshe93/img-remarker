@@ -1,6 +1,6 @@
 {
   "name": "img-remarker",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Remark a img as canvas.",
   "main": "dist/ImgRemarker.min.js",
   "scripts": {
