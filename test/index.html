@@ -1,0 +1,29 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app"></div>
+    <script src="../dist/ImgRemarker.dev.js"></script>
+    <script>
+        console.log(window.ImgRemarker);
+        const m = new ImgRemarker({
+            width: '300px',
+            height: '350px',
+            text: 'HelloWorld',
+            textHeight: '50px',
+            textStyle: 'normal',
+            // textSize: '20px',
+            textFamily: '黑体',
+            textColor: '#333',
+            // imgSrc: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-K60SA0cvvaFJEXlH60k98JjYOvlidFZJSq_aiI5bFGstxp3k4Q'
+            imgSrc: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAANlBMVEXw8PCMsNb18/GgvNuFrNTd4+ukv9zZ4eqDq9Th5uz39fKbudnK1+W2yuB+qNOIrtXr7e/N2eZK/H1MAAABwElEQVR4nO3cwU4bQRBFUTzjMWMbGPL/PxukSBGsKMSrphOds0FsHn1lllY9PAAAAAAAAAAAAAAAAAyxlIyeClqeLwXrNnYqabmcT2+O0x/Hhx9/f90fx04lLZdTQbEwNpWkUGHPVJJChT1TSQoV9kwlKVTYM5WkUGHPVJJChT1TSQoV9kwlKVTYM5WkUGHPVJJChT1TSQoV9kwlFZ+1Fb5gEJwqet0Kruvx+atO56exU9u1VLi9nAsqr3p719ip/V76oLdz6S/O6FgVKpydQoXzU6hwfgoVzk+hwvkpVDg/hQrnp1Dh/BQqnJ9ChfNTqHB+Cr9WeIz1A4XrWPfRhcd6qx3sCLlda69KFg4+NpJ8lUKFPRQq7NrKUaiwaytHocKurRyFCru2chQq7NrKUaiwaytHocKurRyFCru2chQq7NrKUaiwayvnBwpv3U0fLNHCl73gfq1cccj5VXlU8abC62PBdt9LFyFi9qet8qzv/ae8dysdJAlK3jYpqZ1cSRbOeZ9GoUKFChUqVKhQoUKFChUqVKhQoUKFChUqVKhQoUKFCv+PwsFXI8YXPo++GhH8EkIxcbTRgQAAAPBv+Q1d2HV1jgPIigAAAABJRU5ErkJggg=='
+        });
+        m.mount('#app');
+        console.log(m);
+    </script>
+</body>
+</html>

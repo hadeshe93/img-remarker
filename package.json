@@ -1,0 +1,33 @@
+{
+  "name": "img-remarker",
+  "version": "0.0.1",
+  "description": "Remark a img as canvas.",
+  "main": "dist/ImgRemarker.min.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "cross-env NODE_ENV=development rollup --config ./build/rollup.dev.config.js --watch",
+    "prd": "cross-env NODE_ENV=production rollup --config ./build/rollup.prd.config.js",
+    "test:dev": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hadeshe93/img-remarker.git"
+  },
+  "keywords": [],
+  "author": "hadeshe93 <hadeshe93@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hadeshe93/img-remarker/issues"
+  },
+  "homepage": "https://github.com/hadeshe93/img-remarker#readme",
+  "devDependencies": {
+    "@babel/core": "^7.1.6",
+    "@babel/plugin-transform-runtime": "^7.1.0",
+    "@babel/preset-env": "^7.1.6",
+    "cross-env": "^5.2.0",
+    "rollup-plugin-babel": "^4.0.3",
+    "rollup-plugin-browsersync": "^0.2.6",
+    "rollup-plugin-clear": "^2.0.7",
+    "rollup-plugin-uglify": "^6.0.0"
+  }
+}

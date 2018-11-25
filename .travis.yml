@@ -1,0 +1,34 @@
+language: node_js
+node_js:
+  - "10"
+  - "9"
+install:
+- npm install
+os:
+- linux
+
+stages:
+  - build
+  - deploy
+
+after_deploy:
+  - echo "NPM Deploying Finished ..."
+
+jobs:
+  include:
+    - stage: build
+      script:
+        - echo "NPM Building Started ..."
+        - npm version
+        - npm run build
+        - echo "NPM Building Finished"
+    - stage: deploy
+      script:
+        - echo "Excuting Deploying ..."
+      # deploy:
+      #   provider: npm
+      #   email: hadeshe93@gmail.com
+      #   api_key: "$NPM_TOKEN"
+      #   skip_cleanup: true
+      #   on:
+      #     tags: true
