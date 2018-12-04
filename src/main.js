@@ -64,9 +64,8 @@ function ImgRemarker (opts) {
         TEXT_HEIGHT: '30px',
         TEXT_STYLE: 'normal',
         TEXT_SIZE: '14px',
-        TEXT_FAMILY: 'SimHei',
-        TEXT_COLOR: '#000',
-        TEXT_LINE_HEIGHT: '14px'
+        TEXT_FAMILY: 'sans-serif',
+        TEXT_COLOR: '#000000'
     };
 
     // canvas 绘字自动换行
@@ -77,7 +76,6 @@ function ImgRemarker (opts) {
 
         let context = _this.ctx;
         let canvas = context.canvas;
-        console.log(canvas);
 
         if (typeof maxWidth === 'undefined') {
             maxWidth = (canvas && canvas.width) || 300;
@@ -87,12 +85,12 @@ function ImgRemarker (opts) {
         }
 
         const arrTexts = text.split('\n');
-        console.log(arrTexts);
+        
         for (let i = 0; i < arrTexts.length; i++) {
             // 字符分隔为数组
             let arrText = arrTexts[i].split('');
             let line = '';
-            console.log(arrText);
+            
             for (let n = 0; n < arrText.length; n++) {
                 let testLine = line + arrText[n];
                 let metrics = context.measureText(testLine);
@@ -105,38 +103,9 @@ function ImgRemarker (opts) {
                     line = testLine;
                 }
             }
-            console.log(y);
-            console.log(lineHeight);
-            console.log(i);
+
             context.fillText(line, x, y + lineHeight * i);
         }
-    };
-
-    // 渲染 canvas
-    const _render = function () {
-        return _this._prm.then(function () {
-            const textHeight = _this.opts.textHeight;
-            const cntrWidth = _this.opts.width;
-            const cntrHeight = _this.opts.height - textHeight;
-            let imgWidth = 0;
-            let imgHeight = 0;
-
-            console.log('执行渲染');
-            imgWidth = parseFloat(_this.img.width);
-            imgHeight = parseFloat(_this.img.height);
-
-            const ratio = _getScreenDefRatio(_this.ctx);
-            const loc = _adaptImgContain(cntrWidth, cntrHeight, imgWidth, imgHeight);
-            _this.ctx.scale(ratio, ratio);
-            _this.ctx.drawImage(_this.img, loc.x, loc.y, loc.width, loc.height);
-            _this.ctx.font = _this.opts.textFont;
-            _this.ctx.fillStyle = _this.opts.textColor;
-            _this.ctx.textAlign = 'center';
-            _this.ctx.textBaseline = 'top';
-            _wrapText(_this.opts.text, cntrWidth / 2, loc.y + loc.height, undefined, _this.opts.textLineHeight);
-        }).catch(function (err) {
-            throw err;
-        });
     };
 
     // 转 canvas 到 img
@@ -151,14 +120,15 @@ function ImgRemarker (opts) {
         return image;
     };
 
-    // 初始化
-    const _init = function () {
-        // src 可以为 url 也可以为 dataurl
-        const imgSrc = _this.opts.imgSrc;
-        if (!imgSrc) {
-            const err = new Error('无效的选项：imgSrc');
+    // 校验参数
+    const _checkParams = function () {
+        // 校验 imgSrc
+        if (!_this.opts.imgSrc) {
+            const err = new Error('imgSrc 不能为空');
             throw err;
         }
+
+        // 校验 width 和 height
         _this.opts.width = _this.opts.width || DEFAULT_OPTS.WIDTH;
         _this.opts.height = _this.opts.height || DEFAULT_OPTS.HEIGHT;
         if (isNaN(parseFloat(_this.opts.width))) {
@@ -170,26 +140,48 @@ function ImgRemarker (opts) {
             throw err;
         }
 
+        // 校验 textFont
+        _this.opts.textStyle = _this.opts.textStyle || DEFAULT_OPTS.TEXT_STYLE;
+        _this.opts.textSize = _this.opts.textSize || DEFAULT_OPTS.TEXT_SIZE;
+        _this.opts.textFamily = _this.opts.textFamily || DEFAULT_OPTS.TEXT_FAMILY;
+        // 新生成的属性：textFont
         _this.opts.textFont = [
-            _this.opts.textStyle || DEFAULT_OPTS.TEXT_STYLE,
-            _this.opts.textSize || DEFAULT_OPTS.TEXT_SIZE,
-            _this.opts.textFamily || DEFAULT_OPTS.TEXT_FAMILY
+            _this.opts.textStyle,
+            _this.opts.textSize,
+            _this.opts.textFamily
         ].join(' ');
+
+        // 校验 textColor
         _this.opts.textColor = _this.opts.textColor || DEFAULT_OPTS.TEXT_COLOR;
+        
+        // 校验 textHeight
         _this.opts.textHeight = parseFloat(_this.opts.textHeight || DEFAULT_OPTS.TEXT_HEIGHT);
+
+        // 校验 textLineHeight
         if (_this.opts.textLineHeight && isNaN(parseFloat(_this.opts.textLineHeight))) {
-            const err = new Error('无效的选项：textLineHeight');
-            throw err;
+            throw new Error('无效的选项：textLineHeight');
         } else if (!_this.opts.textLineHeight) {
             _this.opts.textLineHeight = parseFloat(_this.opts.textSize);
         }
+        console.log(JSON.stringify(_this.opts));
+    };
 
+    // 初始化
+    const _init = function () {
+        // 校验入参
+        _checkParams();
+
+        // src 可以为 url 也可以为 dataurl
+        const imgSrc = _this.opts.imgSrc;
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         const img = new Image();
         const prm = new Promise(function (resolve, reject) {
             img.onload = function () {
                 resolve(img);
+            };
+            img.onerror = function () {
+                reject('图片加载失败！');
             };
         });
 
@@ -226,6 +218,33 @@ function ImgRemarker (opts) {
         });
     };
 
+    // 渲染 canvas
+    const _render = function () {
+        return _this._prm.then(function () {
+            const textHeight = _this.opts.textHeight;
+            const cntrWidth = _this.opts.width;
+            const cntrHeight = _this.opts.height - textHeight;
+            let imgWidth = 0;
+            let imgHeight = 0;
+
+            console.log('执行渲染');
+            imgWidth = parseFloat(_this.img.width);
+            imgHeight = parseFloat(_this.img.height);
+
+            const ratio = _getScreenDefRatio(_this.ctx);
+            const loc = _adaptImgContain(cntrWidth, cntrHeight, imgWidth, imgHeight);
+            _this.ctx.scale(ratio, ratio);
+            _this.ctx.drawImage(_this.img, loc.x, loc.y, loc.width, loc.height);
+            _this.ctx.font = _this.opts.textFont;
+            _this.ctx.fillStyle = _this.opts.textColor;
+            _this.ctx.textAlign = 'center';
+            _this.ctx.textBaseline = 'top';
+            _wrapText(_this.opts.text, cntrWidth / 2, loc.y + loc.height, undefined, _this.opts.textLineHeight);
+        }).catch(function (err) {
+            throw err;
+        });
+    };
+
     // 将 canvas 挂载到页面上
     const mount = function (el) {
         _render().then(function () {
@@ -255,16 +274,6 @@ function ImgRemarker (opts) {
     this._prm = _init();
     // 只给外部暴露 mount 方法
     this.mount = mount;
-};
-
-// file 转 base64
-ImgRemarker.getDataUrlFromFile = function (file, onloadFn) {
-    if (!FileReader || !file) return false;
-    const reader = new FileReader();
-    reader.onloadend = function (evt) {
-        onloadFn(evt);
-    };
-    reader.readAsDataURL(file);
 };
 
 export default ImgRemarker;
