@@ -56,7 +56,7 @@ function ImgRemarker (opts) {
     /**
      * 下划线开头的都是私有方法
       */
-    const _this = this;
+    // const this = this;
     const DEFAULT_OPTS = {
         WIDTH: '0px',
         HEIGHT: '0px',
@@ -69,12 +69,12 @@ function ImgRemarker (opts) {
     };
 
     // canvas 绘字自动换行
-    const _wrapText = function (text, x, y, maxWidth, lineHeight) {
+    const _wrapText = (text, x, y, maxWidth, lineHeight) => {
         if (typeof text !== 'string' || typeof x !== 'number' || typeof y !== 'number') {
             return;
         }
 
-        let context = _this.ctx;
+        let context = this.ctx;
         let canvas = context.canvas;
 
         if (typeof maxWidth === 'undefined') {
@@ -85,12 +85,12 @@ function ImgRemarker (opts) {
         }
 
         const arrTexts = text.split('\n');
-        
+
         for (let i = 0; i < arrTexts.length; i++) {
             // 字符分隔为数组
             let arrText = arrTexts[i].split('');
             let line = '';
-            
+
             for (let n = 0; n < arrText.length; n++) {
                 let testLine = line + arrText[n];
                 let metrics = context.measureText(testLine);
@@ -109,70 +109,70 @@ function ImgRemarker (opts) {
     };
 
     // 转 canvas 到 img
-    const _convertCanvasToImage = function () {
+    const _convertCanvasToImage = () => {
         var image = new Image();
         // canvas.toDataURL 返回的是一串Base64编码的URL，当然,浏览器自己肯定支持
         // 指定格式 PNG
-        image.src = _this.canvas.toDataURL('image/png');
+        image.src = this.canvas.toDataURL('image/png');
         // 以下两行是为了防止 canvas 进行高清屏适配时引起的放大
-        image.style.width = _this.opts.width + 'px';
-        image.style.height = _this.opts.height + 'px';
+        image.style.width = this.opts.width + 'px';
+        image.style.height = this.opts.height + 'px';
         return image;
     };
 
     // 校验参数
-    const _checkParams = function () {
+    const _checkParams = () => {
         // 校验 imgSrc
-        if (!_this.opts.imgSrc) {
+        if (!this.opts.imgSrc) {
             const err = new Error('imgSrc 不能为空');
             throw err;
         }
 
         // 校验 width 和 height
-        _this.opts.width = _this.opts.width || DEFAULT_OPTS.WIDTH;
-        _this.opts.height = _this.opts.height || DEFAULT_OPTS.HEIGHT;
-        if (isNaN(parseFloat(_this.opts.width))) {
+        this.opts.width = this.opts.width || DEFAULT_OPTS.WIDTH;
+        this.opts.height = this.opts.height || DEFAULT_OPTS.HEIGHT;
+        if (isNaN(parseFloat(this.opts.width))) {
             const err = new Error('无效的选项：width');
             throw err;
         }
-        if (isNaN(parseFloat(_this.opts.height))) {
+        if (isNaN(parseFloat(this.opts.height))) {
             const err = new Error('无效的选项：height');
             throw err;
         }
 
         // 校验 textFont
-        _this.opts.textStyle = _this.opts.textStyle || DEFAULT_OPTS.TEXT_STYLE;
-        _this.opts.textSize = _this.opts.textSize || DEFAULT_OPTS.TEXT_SIZE;
-        _this.opts.textFamily = _this.opts.textFamily || DEFAULT_OPTS.TEXT_FAMILY;
+        this.opts.textStyle = this.opts.textStyle || DEFAULT_OPTS.TEXT_STYLE;
+        this.opts.textSize = this.opts.textSize || DEFAULT_OPTS.TEXT_SIZE;
+        this.opts.textFamily = this.opts.textFamily || DEFAULT_OPTS.TEXT_FAMILY;
         // 新生成的属性：textFont
-        _this.opts.textFont = [
-            _this.opts.textStyle,
-            _this.opts.textSize,
-            _this.opts.textFamily
+        this.opts.textFont = [
+            this.opts.textStyle,
+            this.opts.textSize,
+            this.opts.textFamily
         ].join(' ');
 
         // 校验 textColor
-        _this.opts.textColor = _this.opts.textColor || DEFAULT_OPTS.TEXT_COLOR;
-        
+        this.opts.textColor = this.opts.textColor || DEFAULT_OPTS.TEXT_COLOR;
+
         // 校验 textHeight
-        _this.opts.textHeight = parseFloat(_this.opts.textHeight || DEFAULT_OPTS.TEXT_HEIGHT);
+        this.opts.textHeight = parseFloat(this.opts.textHeight || DEFAULT_OPTS.TEXT_HEIGHT);
 
         // 校验 textLineHeight
-        if (_this.opts.textLineHeight && isNaN(parseFloat(_this.opts.textLineHeight))) {
+        if (this.opts.textLineHeight && isNaN(parseFloat(this.opts.textLineHeight))) {
             throw new Error('无效的选项：textLineHeight');
-        } else if (!_this.opts.textLineHeight) {
-            _this.opts.textLineHeight = parseFloat(_this.opts.textSize);
+        } else if (!this.opts.textLineHeight) {
+            this.opts.textLineHeight = parseFloat(this.opts.textSize);
         }
-        console.log(JSON.stringify(_this.opts));
+        console.log(JSON.stringify(this.opts));
     };
 
     // 初始化
-    const _init = function () {
+    const _init = () => {
         // 校验入参
         _checkParams();
 
         // src 可以为 url 也可以为 dataurl
-        const imgSrc = _this.opts.imgSrc;
+        const imgSrc = this.opts.imgSrc;
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         const img = new Image();
@@ -181,73 +181,75 @@ function ImgRemarker (opts) {
                 resolve(img);
             };
             img.onerror = function () {
-                reject('图片加载失败！');
+                reject(new Error('图片加载失败'));
             };
         });
 
         // 初始化配置参数
-        _this.ctx = ctx;
-        _this.canvas = canvas;
-        _this.img = img;
+        this.ctx = ctx;
+        this.canvas = canvas;
+        this.img = img;
 
         img.setAttribute('crossOrigin', 'Anonymous');
         img.src = imgSrc;
 
-        return prm.then(function (m) {
+        return prm.then((m) => {
             // 如果没有传入 width，则默认使用图片的 width
-            if (!_this.opts.width) {
-                _this.opts.width = parseFloat(img.width);
+            if (!this.opts.width) {
+                this.opts.width = parseFloat(img.width);
             } else {
-                _this.opts.width = parseFloat(_this.opts.width);
+                this.opts.width = parseFloat(this.opts.width);
             }
 
             // 如果没有传入 height，则默认使用图片的 height
-            if (!_this.opts.height) {
-                _this.opts.height = parseFloat(img.height);
+            if (!this.opts.height) {
+                this.opts.height = parseFloat(img.height);
             } else {
-                _this.opts.height = parseFloat(_this.opts.height);
+                this.opts.height = parseFloat(this.opts.height);
             }
-            const ratio = _getScreenDefRatio(_this.ctx);
+            const ratio = _getScreenDefRatio(this.ctx);
             console.log(ratio);
-            canvas.width = _this.opts.width * ratio + '';
-            canvas.height = _this.opts.height * ratio + '';
-            canvas.style.width = _this.opts.width + 'px';
-            canvas.style.height = _this.opts.height + 'px';
-        }).catch(function (err) {
+            canvas.width = this.opts.width * ratio + '';
+            canvas.height = this.opts.height * ratio + '';
+            canvas.style.width = this.opts.width + 'px';
+            canvas.style.height = this.opts.height + 'px';
+        }).catch((err) => {
             console.error(err);
+            throw err;
         });
     };
 
     // 渲染 canvas
-    const _render = function () {
-        return _this._prm.then(function () {
-            const textHeight = _this.opts.textHeight;
-            const cntrWidth = _this.opts.width;
-            const cntrHeight = _this.opts.height - textHeight;
+    const _render = () => {
+        return this._prm.then(() => {
+            const textHeight = this.opts.textHeight;
+            const cntrWidth = this.opts.width;
+            const cntrHeight = this.opts.height - textHeight;
             let imgWidth = 0;
             let imgHeight = 0;
 
             console.log('执行渲染');
-            imgWidth = parseFloat(_this.img.width);
-            imgHeight = parseFloat(_this.img.height);
+            imgWidth = parseFloat(this.img.width);
+            imgHeight = parseFloat(this.img.height);
 
-            const ratio = _getScreenDefRatio(_this.ctx);
+            const ratio = _getScreenDefRatio(this.ctx);
             const loc = _adaptImgContain(cntrWidth, cntrHeight, imgWidth, imgHeight);
-            _this.ctx.scale(ratio, ratio);
-            _this.ctx.drawImage(_this.img, loc.x, loc.y, loc.width, loc.height);
-            _this.ctx.font = _this.opts.textFont;
-            _this.ctx.fillStyle = _this.opts.textColor;
-            _this.ctx.textAlign = 'center';
-            _this.ctx.textBaseline = 'top';
-            _wrapText(_this.opts.text, cntrWidth / 2, loc.y + loc.height, undefined, _this.opts.textLineHeight);
-        }).catch(function (err) {
+            this.ctx.scale(ratio, ratio);
+            this.ctx.drawImage(this.img, loc.x, loc.y, loc.width, loc.height);
+            this.ctx.font = this.opts.textFont;
+            this.ctx.fillStyle = this.opts.textColor;
+            this.ctx.textAlign = 'center';
+            this.ctx.textBaseline = 'top';
+            _wrapText(this.opts.text, cntrWidth / 2, loc.y + loc.height, undefined, this.opts.textLineHeight);
+        }).catch((err) => {
+            console.error(err);
             throw err;
         });
     };
 
     // 将 canvas 挂载到页面上
-    const mount = function (el) {
-        _render().then(function () {
+    const mount = (el) => {
+        _render().then(() => {
             console.log('执行挂载');
             let elm = null;
             if (typeof el === 'string') {
@@ -259,7 +261,7 @@ function ImgRemarker (opts) {
             const m = _convertCanvasToImage();
 
             if (elm) {
-                elm.appendChild(_this.canvas);
+                // elm.appendChild(this.canvas);
                 elm.appendChild(m);
             } else {
                 console.warn('你传入的不是一个有效的选择器或者一个元素对象');
