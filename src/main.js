@@ -168,6 +168,13 @@ function ImgRemarker (opts) {
         } else if (!this.opts.textLineHeight) {
             this.opts.textLineHeight = parseFloat(this.opts.textSize);
         }
+        console.log(JSON.stringify(this.opts));
+    };
+
+    // 初始化
+    const _init = () => {
+        // 校验入参
+        _checkParams();
 
         // 校验上外边距 paddingTop
         if (this.opts.paddingTop) {
